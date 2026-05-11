@@ -1,0 +1,368 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kazene.example/schemas/trace-claim-v0.1.schema.json",
+  "title": "Trace Claim v0.1",
+  "description": "Schema for provenance inference output emitted by Trace Wing.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "trace_claim"
+  ],
+  "properties": {
+    "trace_claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "claim_id",
+        "generated_at",
+        "engine",
+        "target_artifact",
+        "classification",
+        "confidence",
+        "origin_candidate",
+        "evidence",
+        "policy_result",
+        "review",
+        "audit"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "trace-claim-v0.1"
+        },
+        "claim_id": {
+          "type": "string",
+          "pattern": "^trace-[A-Za-z0-9._:-]+$"
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "engine": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "wing",
+            "version",
+            "mode"
+          ],
+          "properties": {
+            "wing": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "single-wing",
+                "multi-wing"
+              ]
+            }
+          }
+        },
+        "target_artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "artifact_id",
+            "artifact_type",
+            "observed_at",
+            "content_hash"
+          ],
+          "properties": {
+            "artifact_id": {
+              "type": "string"
+            },
+            "artifact_type": {
+              "type": "string",
+              "enum": [
+                "note_article",
+                "github_repo",
+                "github_file",
+                "blog_post",
+                "paper",
+                "conversation_log",
+                "manual_document",
+                "other"
+              ]
+            },
+            "title": {
+              "type": "string"
+            },
+            "uri": {
+              "type": "string"
+            },
+            "observed_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "published_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "author_claim": {
+              "type": "string"
+            },
+            "content_hash": {
+              "type": "string"
+            },
+            "language": {
+              "type": "string"
+            }
+          }
+        },
+        "classification": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "lineage_type",
+            "novelty_score"
+          ],
+          "properties": {
+            "lineage_type": {
+              "type": "string",
+              "enum": [
+                "independent",
+                "resonant",
+                "derived",
+                "forked",
+                "mutated",
+                "uncertain",
+                "conflicted"
+              ]
+            },
+            "novelty_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "summary": {
+              "type": "string"
+            }
+          }
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "origin_candidate": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_id",
+            "author",
+            "published_at",
+            "confidence"
+          ],
+          "properties": {
+            "source_id": {
+              "type": "string"
+            },
+            "author": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "uri": {
+              "type": "string"
+            },
+            "published_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "structural_similarity",
+            "temporal_precedence",
+            "motif_overlap",
+            "mutation_notes",
+            "protocol_pattern_match",
+            "citation_gap"
+          ],
+          "properties": {
+            "structural_similarity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "temporal_precedence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "motif_overlap": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "mutation_notes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "protocol_pattern_match": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "citation_gap": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "supporting_artifacts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "source_id",
+                  "role"
+                ],
+                "properties": {
+                  "source_id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "uri": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "origin",
+                      "intermediate",
+                      "comparison",
+                      "target"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "policy_result": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "attribution_suggestion",
+            "public_accusation_allowed",
+            "human_review_required",
+            "royalty_assessment_allowed"
+          ],
+          "properties": {
+            "attribution_suggestion": {
+              "type": "boolean"
+            },
+            "public_accusation_allowed": {
+              "type": "boolean"
+            },
+            "human_review_required": {
+              "type": "boolean"
+            },
+            "royalty_assessment_allowed": {
+              "type": "boolean"
+            },
+            "recommended_action": {
+              "type": "string",
+              "enum": [
+                "archive_only",
+                "suggest_attribution",
+                "request_human_review",
+                "request_royalty_assessment",
+                "open_dispute_ready_record"
+              ]
+            }
+          }
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "not_required",
+                "pending",
+                "approved",
+                "rejected",
+                "disputed"
+              ]
+            },
+            "review_ticket_id": {
+              "type": "string"
+            },
+            "reviewed_by": {
+              "type": "string"
+            },
+            "reviewed_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "notes": {
+              "type": "string"
+            }
+          }
+        },
+        "audit": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "processing_run_id",
+            "state",
+            "created_by_event"
+          ],
+          "properties": {
+            "processing_run_id": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string",
+              "enum": [
+                "OBSERVED",
+                "NORMALIZED",
+                "PARSED",
+                "FINGERPRINTED",
+                "CANDIDATE_LINKED",
+                "SCORED",
+                "CLASSIFIED",
+                "ATTRIBUTION_SUGGESTED",
+                "HUMAN_REVIEW",
+                "ROYALTY_ELIGIBLE",
+                "DISPUTED",
+                "ARCHIVED"
+              ]
+            },
+            "created_by_event": {
+              "type": "string"
+            },
+            "log_ref": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
