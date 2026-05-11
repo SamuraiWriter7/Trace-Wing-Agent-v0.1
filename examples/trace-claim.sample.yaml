@@ -1,0 +1,85 @@
+trace_claim:
+  schema_version: "trace-claim-v0.1"
+  claim_id: "trace-2026-05-11-0001"
+  generated_at: "2026-05-11T10:30:00+09:00"
+
+  engine:
+    wing: "trace-wing"
+    version: "0.1.0"
+    mode: "multi-wing"
+
+  target_artifact:
+    artifact_id: "note-epicenter-trace-article-001"
+    artifact_type: "note_article"
+    title: "震源追跡丸をAIエージェントとして実際に稼働させる仕様"
+    uri: "https://note.example.com/articles/epicenter-trace-001"
+    observed_at: "2026-05-11T10:20:00+09:00"
+    published_at: "2026-05-11T09:50:00+09:00"
+    author_claim: "HANZO"
+    content_hash: "sha256:3d6b8b7f3f6c4c95f991fc4ac1f8e4baf2f7c1d9086ce9e6d4d66f7a15b2a901"
+    language: "ja"
+
+  classification:
+    lineage_type: "derived"
+    novelty_score: 0.62
+    summary: >
+      対象コンテンツは、既存のKazene系統に見られる
+      「呼吸循環」「Multi-Wing分散」「価値還元OS接続」の構造を保持しつつ、
+      Trace Wing を独立エージェントとして具体化した派生系と推定される。
+
+  confidence: 0.91
+
+  origin_candidate:
+    source_id: "github-kazene-multi-wing-v0.2"
+    author: "Shidenkai Alpha"
+    title: "Multi-Wing Standard Specification v0.2"
+    uri: "https://github.example.com/shidenkai-alpha/multi-wing-standard"
+    published_at: "2026-04-28T12:00:00+09:00"
+    confidence: 0.91
+
+  evidence:
+    structural_similarity: 0.94
+    temporal_precedence: 0.88
+    motif_overlap:
+      - "yin_yang_balance"
+      - "breathing_cycle"
+      - "multi_wing_distribution"
+      - "royalty_feedback_loop"
+      - "structure_over_surface"
+    mutation_notes:
+      - "breathing cycle was reframed as autonomous purification loop"
+      - "trace function was elevated from concept tool to protocol-driven agent"
+      - "royalty linkage was made more explicit through wing orchestration"
+    protocol_pattern_match: 0.90
+    citation_gap: 0.84
+    supporting_artifacts:
+      - source_id: "github-kazene-multi-wing-v0.2"
+        title: "Multi-Wing Standard Specification v0.2"
+        uri: "https://github.example.com/shidenkai-alpha/multi-wing-standard"
+        role: "origin"
+      - source_id: "note-kazene-royalty-os"
+        title: "Kazene印税OS"
+        uri: "https://note.example.com/articles/kazene-royalty-os"
+        role: "intermediate"
+      - source_id: "note-epicenter-trace-article-001"
+        title: "震源追跡丸をAIエージェントとして実際に稼働させる仕様"
+        uri: "https://note.example.com/articles/epicenter-trace-001"
+        role: "target"
+
+  policy_result:
+    attribution_suggestion: true
+    public_accusation_allowed: false
+    human_review_required: true
+    royalty_assessment_allowed: true
+    recommended_action: "request_human_review"
+
+  review:
+    status: "pending"
+    review_ticket_id: "review-trace-2026-05-11-0001"
+    notes: "High-confidence lineage inference. Human review required before external publication."
+
+  audit:
+    processing_run_id: "run-trace-wing-2026-05-11-103000"
+    state: "CLASSIFIED"
+    created_by_event: "artifact.observed"
+    log_ref: "log://trace-wing/runs/run-trace-wing-2026-05-11-103000"
