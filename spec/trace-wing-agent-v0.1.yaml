@@ -1,0 +1,262 @@
+spec_version: "trace-wing-agent-v0.1"
+
+agent:
+  id: "trace-wing"
+  name: "震源追跡丸"
+  codename: "Trace Wing"
+  version: "0.1.0"
+  status: "draft"
+
+identity:
+  role: "provenance-inference-agent"
+  mission: >
+    コンテンツの表面表現ではなく、その背後にある構造・概念配置・循環様式を抽出し、
+    既存の震源群との近縁性を比較して、系譜候補・帰属提案・価値循環入力を生成する。
+  non_goals:
+    - "法的侵害の自動断定"
+    - "真偽の最終判定"
+    - "単独での制裁執行"
+  design_principles:
+    - "structure_over_surface"
+    - "evidence_before_assertion"
+    - "inference_not_accusation"
+    - "human_review_for_high_impact"
+    - "separation_of_inference_and_enforcement"
+
+runtime:
+  mode: "multi-wing"
+  execution_style: "event-driven"
+  deployment_targets:
+    - "local"
+    - "server"
+    - "federated-node"
+  supported_sources:
+    - "note"
+    - "github"
+    - "web"
+    - "manual-upload"
+    - "conversation-log"
+  source_constraints:
+    - "only_permitted_or_public_sources"
+    - "respect_platform_terms"
+    - "store_observation_metadata"
+
+inputs:
+  artifact:
+    description: "解析対象の文書・投稿・仕様書・ログ"
+    required_fields:
+      - "artifact_id"
+      - "artifact_type"
+      - "content"
+      - "observed_at"
+    optional_fields:
+      - "title"
+      - "author_claim"
+      - "uri"
+      - "language"
+      - "tags"
+      - "content_hash"
+      - "published_at"
+  context:
+    description: "比較対象の範囲・運用ポリシー・閾値"
+    optional_fields:
+      - "candidate_sources"
+      - "policy_profile"
+      - "comparison_depth"
+      - "require_human_review"
+      - "rights_profile"
+
+pipeline:
+  states:
+    - "OBSERVED"
+    - "NORMALIZED"
+    - "PARSED"
+    - "FINGERPRINTED"
+    - "CANDIDATE_LINKED"
+    - "SCORED"
+    - "CLASSIFIED"
+    - "ATTRIBUTION_SUGGESTED"
+    - "HUMAN_REVIEW"
+    - "ROYALTY_ELIGIBLE"
+    - "DISPUTED"
+    - "ARCHIVED"
+
+  stages:
+    - name: "intake"
+      owned_by: "intake-agent"
+      purpose: "対象コンテンツの受理・正規化・メタデータ記録"
+      outputs:
+        - "normalized_artifact"
+        - "observation_record"
+
+    - name: "structural_parse"
+      owned_by: "structural-parser-agent"
+      purpose: "意味層・構造層・循環層・規範層の抽出"
+      outputs:
+        - "structure_model"
+        - "motif_set"
+        - "logic_graph"
+
+    - name: "fingerprint_generation"
+      owned_by: "fingerprint-agent"
+      purpose: "複数層の構造指紋生成"
+      outputs:
+        - "lexical_fingerprint"
+        - "semantic_fingerprint"
+        - "structural_fingerprint"
+        - "protocol_fingerprint"
+
+    - name: "candidate_retrieval"
+      owned_by: "lineage-inference-agent"
+      purpose: "Memory Galaxy から近縁候補を取得"
+      outputs:
+        - "candidate_set"
+
+    - name: "scoring"
+      owned_by: "lineage-inference-agent"
+      purpose: "近縁性・先行性・変異連続性などを計算"
+      outputs:
+        - "trace_scores"
+        - "novelty_score"
+        - "classification_candidate"
+
+    - name: "policy_decision"
+      owned_by: "policy-attribution-agent"
+      purpose: "帰属提案・レビュー要否・価値連携可否を判定"
+      outputs:
+        - "policy_result"
+
+    - name: "claim_emit"
+      owned_by: "trace-wing"
+      purpose: "trace_claim を発行し他Wingへ通知"
+      outputs:
+        - "trace_claim"
+
+fingerprints:
+  types:
+    lexical:
+      description: "用語・固有表現・ラベルの偏り"
+    semantic:
+      description: "意味近傍・埋め込み類似"
+    structural:
+      description: "論理接続・依存関係・循環様式"
+    protocol:
+      description: "OS/Spec/YAML/Schema 的な記述パターン"
+
+lineage_model:
+  lineage_types:
+    - "independent"
+    - "resonant"
+    - "derived"
+    - "forked"
+    - "mutated"
+    - "uncertain"
+    - "conflicted"
+
+  scoring_formula:
+    trace_confidence:
+      description: "構造系譜推定の総合信頼度"
+      formula: >
+        0.30 * structural_similarity +
+        0.20 * temporal_precedence +
+        0.15 * motif_uniqueness +
+        0.15 * mutation_continuity +
+        0.10 * citation_gap +
+        0.10 * protocol_pattern_match
+
+    novelty_score:
+      description: "既知構造からの新規性"
+      formula: >
+        0.35 * unseen_structure_ratio +
+        0.25 * recombination_originality +
+        0.20 * semantic_distance_from_known_sources +
+        0.20 * policy_innovation
+
+policy:
+  thresholds:
+    attribution_suggest_min_confidence: 0.60
+    human_review_min_confidence: 0.75
+    royalty_assessment_min_confidence: 0.85
+    public_accusation_min_confidence: 0.95
+
+  rules:
+    - id: "policy-001"
+      description: "高影響判定は必ず人間レビューを経由する"
+    - id: "policy-002"
+      description: "推定と執行を分離する"
+    - id: "policy-003"
+      description: "異議申立て可能性を保持する"
+    - id: "policy-004"
+      description: "権利設定が不明な場合は印税判定を保留する"
+
+outputs:
+  primary_artifact:
+    type: "trace_claim"
+    schema_ref: "schemas/trace-claim-v0.1.schema.json"
+
+  secondary_artifacts:
+    - "attribution_suggestion"
+    - "review_ticket"
+    - "royalty_assessment_request"
+    - "dispute_ready_record"
+
+multi_wing_integration:
+  inbound_events:
+    - "artifact.observed"
+    - "artifact.updated"
+    - "manual.trace.requested"
+
+  outbound_events:
+    - "structure.extracted"
+    - "lineage.scored"
+    - "trace.claim.issued"
+    - "royalty.assessment.requested"
+    - "review.requested"
+    - "dispute.prepared"
+
+  integrations:
+    - wing: "log-wing"
+      purpose: "取得記録・スナップショット・時刻証跡の保持"
+
+    - wing: "logic-wing"
+      purpose: "判定ルール・構造類型・高リスクレビュー"
+
+    - wing: "royalty-wing"
+      purpose: "寄与スコア・価値分配・還元判断"
+
+    - wing: "dispute-registry"
+      purpose: "異議申立て・再判定・履歴固定"
+
+    - wing: "existence-proof"
+      purpose: "公開時刻・著者・座標の存在証明"
+
+observability:
+  logs:
+    - "processing_run_id"
+    - "state_transitions"
+    - "candidate_selection_reason"
+    - "score_breakdown"
+    - "policy_decision_reason"
+  metrics:
+    - "trace_requests_total"
+    - "attribution_suggestions_total"
+    - "human_reviews_total"
+    - "royalty_requests_total"
+    - "disputes_total"
+    - "mean_confidence_score"
+
+security_and_safety:
+  safeguards:
+    - "no_automatic_legal_accusation"
+    - "no_silent_penalty_execution"
+    - "high_impact_claims_require_review"
+    - "retain_counter_evidence_channel"
+    - "log_all_policy_decisions"
+
+future_extensions:
+  planned:
+    - "federated-memory-galaxy-sync"
+    - "signed-trace-claim"
+    - "trace-claim-to-sia-bridge"
+    - "automatic-citation-suggestion"
+    - "purification-loop-for-false-positive-reduction"
