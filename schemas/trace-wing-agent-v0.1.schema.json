@@ -1,0 +1,585 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kazene.example/schemas/trace-wing-agent-v0.1.schema.json",
+  "title": "Trace Wing Agent Specification v0.1",
+  "description": "Schema for spec/trace-wing-agent-v0.1.yaml",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "spec_version",
+    "agent",
+    "identity",
+    "runtime",
+    "inputs",
+    "pipeline",
+    "fingerprints",
+    "lineage_model",
+    "policy",
+    "outputs",
+    "multi_wing_integration",
+    "observability",
+    "security_and_safety",
+    "future_extensions"
+  ],
+  "properties": {
+    "spec_version": {
+      "type": "string",
+      "const": "trace-wing-agent-v0.1"
+    },
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "codename",
+        "version",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "const": "trace-wing"
+        },
+        "name": {
+          "type": "string"
+        },
+        "codename": {
+          "type": "string",
+          "const": "Trace Wing"
+        },
+        "version": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "alpha",
+            "beta",
+            "stable",
+            "deprecated"
+          ]
+        }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "mission",
+        "non_goals",
+        "design_principles"
+      ],
+      "properties": {
+        "role": {
+          "type": "string",
+          "const": "provenance-inference-agent"
+        },
+        "mission": {
+          "type": "string",
+          "minLength": 1
+        },
+        "non_goals": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "design_principles": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "execution_style",
+        "deployment_targets",
+        "supported_sources",
+        "source_constraints"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "single-wing",
+            "multi-wing"
+          ]
+        },
+        "execution_style": {
+          "type": "string",
+          "enum": [
+            "event-driven",
+            "batch",
+            "hybrid"
+          ]
+        },
+        "deployment_targets": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "local",
+              "server",
+              "federated-node",
+              "edge"
+            ]
+          }
+        },
+        "supported_sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "note",
+              "github",
+              "web",
+              "manual-upload",
+              "conversation-log",
+              "paper",
+              "other"
+            ]
+          }
+        },
+        "source_constraints": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact",
+        "context"
+      ],
+      "properties": {
+        "artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "description",
+            "required_fields",
+            "optional_fields"
+          ],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "required_fields": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            },
+            "optional_fields": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "context": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "description",
+            "optional_fields"
+          ],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "optional_fields": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "pipeline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "states",
+        "stages"
+      ],
+      "properties": {
+        "states": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "OBSERVED",
+              "NORMALIZED",
+              "PARSED",
+              "FINGERPRINTED",
+              "CANDIDATE_LINKED",
+              "SCORED",
+              "CLASSIFIED",
+              "ATTRIBUTION_SUGGESTED",
+              "HUMAN_REVIEW",
+              "ROYALTY_ELIGIBLE",
+              "DISPUTED",
+              "ARCHIVED"
+            ]
+          }
+        },
+        "stages": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "owned_by",
+              "purpose",
+              "outputs"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "owned_by": {
+                "type": "string"
+              },
+              "purpose": {
+                "type": "string"
+              },
+              "outputs": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "fingerprints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "types"
+      ],
+      "properties": {
+        "types": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "lexical",
+            "semantic",
+            "structural",
+            "protocol"
+          ],
+          "properties": {
+            "lexical": {
+              "$ref": "#/$defs/descriptionObject"
+            },
+            "semantic": {
+              "$ref": "#/$defs/descriptionObject"
+            },
+            "structural": {
+              "$ref": "#/$defs/descriptionObject"
+            },
+            "protocol": {
+              "$ref": "#/$defs/descriptionObject"
+            }
+          }
+        }
+      }
+    },
+    "lineage_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lineage_types",
+        "scoring_formula"
+      ],
+      "properties": {
+        "lineage_types": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "independent",
+              "resonant",
+              "derived",
+              "forked",
+              "mutated",
+              "uncertain",
+              "conflicted"
+            ]
+          }
+        },
+        "scoring_formula": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "trace_confidence",
+            "novelty_score"
+          ],
+          "properties": {
+            "trace_confidence": {
+              "$ref": "#/$defs/scoringFormulaObject"
+            },
+            "novelty_score": {
+              "$ref": "#/$defs/scoringFormulaObject"
+            }
+          }
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "thresholds",
+        "rules"
+      ],
+      "properties": {
+        "thresholds": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "attribution_suggest_min_confidence",
+            "human_review_min_confidence",
+            "royalty_assessment_min_confidence",
+            "public_accusation_min_confidence"
+          ],
+          "properties": {
+            "attribution_suggest_min_confidence": {
+              "$ref": "#/$defs/probability"
+            },
+            "human_review_min_confidence": {
+              "$ref": "#/$defs/probability"
+            },
+            "royalty_assessment_min_confidence": {
+              "$ref": "#/$defs/probability"
+            },
+            "public_accusation_min_confidence": {
+              "$ref": "#/$defs/probability"
+            }
+          }
+        },
+        "rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "description"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^policy-[0-9]{3}$"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_artifact",
+        "secondary_artifacts"
+      ],
+      "properties": {
+        "primary_artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "schema_ref"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "trace_claim"
+            },
+            "schema_ref": {
+              "type": "string"
+            }
+          }
+        },
+        "secondary_artifacts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "multi_wing_integration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inbound_events",
+        "outbound_events",
+        "integrations"
+      ],
+      "properties": {
+        "inbound_events": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "outbound_events": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "integrations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "wing",
+              "purpose"
+            ],
+            "properties": {
+              "wing": {
+                "type": "string"
+              },
+              "purpose": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "observability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "logs",
+        "metrics"
+      ],
+      "properties": {
+        "logs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "metrics": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "security_and_safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "safeguards"
+      ],
+      "properties": {
+        "safeguards": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "future_extensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "planned"
+      ],
+      "properties": {
+        "planned": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "probability": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "descriptionObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "description"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "scoringFormulaObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "formula"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "formula": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
